@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Comment Picker",
+  "version": "2.0.0",
+  "description": "Extract YouTube comments from Videos, Shorts & Posts. Pick random winners with filters and reveals.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

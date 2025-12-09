@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Giveaway Pro</title>
+  <link rel="stylesheet" href="popup.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header with Gradient -->
+    <header class="premium-header">
+      <div class="header-content">
+        <div class="logo">
+          <img src="yt_cm_logo.png" alt="Logo" class="logo-img">
+          <h1>Comment Picker</h1>
+        </div>
+        <button id="headerRefreshBtn" class="header-refresh-btn" style="display: none;" title="Refresh Session">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+        <div class="header-subtitle">Videos • Shorts • Community Posts</div>
+      </div>
+    </header>
+
+    <!-- Status Bar with Glass Effect -->
+    <div class="status-bar glass-effect" id="statusBar">
+      <i class="fas fa-info-circle"></i>
+      <span id="statusText">Navigate to any YouTube page with comments</span>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section quick-actions">
+      <button id="extractBtn" class="btn btn-primary">
+        <i class="fas fa-download"></i>
+        <span>Extract Comments</span>
+      </button>
+      <button id="scrollBtn" class="btn btn-secondary">
+        <i class="fas fa-scroll"></i>
+        <span>Auto-Scroll</span>
+      </button>
+      <button id="stopScrollBtn" class="btn btn-danger" style="display: none;">
+        <i class="fas fa-stop"></i>
+        <span>Stop Scrolling</span>
+      </button>
+      <button id="clearSessionBtn" class="btn btn-secondary" style="display: none;">
+        <i class="fas fa-trash"></i>
+        <span>Clear Session</span>
+      </button>
+    </div>
+
+    <!-- Premium Stats Dashboard -->
+    <div class="section stats-dashboard glass-effect" id="statsSection" style="display: none;">
+      <h2 class="section-title">
+        <i class="fas fa-chart-line"></i> Statistics
+      </h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-comments"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value" id="totalComments">0</div>
+            <div class="stat-label">Total Comments</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value" id="uniqueUsers">0</div>
+            <div class="stat-label">Unique Users</div>
+          </div>
+        </div>
+        <div class="stat-card highlight">
+          <div class="stat-icon">
+            <i class="fas fa-filter"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-value" id="filteredCount">0</div>
+            <div class="stat-label">Eligible</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced Filters -->
+    <div class="section glass-effect" id="filterSection" style="display: none;">
+      <h2 class="section-title">
+        <i class="fas fa-sliders-h"></i> Advanced Filters
+      </h2>
+
+      <div class="filter-group">
+        <label>
+          <i class="fas fa-search"></i> Keyword Filter
+        </label>
+        <div class="input-with-icon">
+          <input type="text" id="filterInput" placeholder="e.g., 'giveaway' or 'entered'" class="input-premium">
+          <i class="fas fa-times-circle clear-icon" id="clearFilter" style="display: none;"></i>
+        </div>
+        <small>Include comments containing this keyword</small>
+      </div>
+
+      <div class="filter-group">
+        <label>
+          <i class="fas fa-ban"></i> Exclude Keywords
+        </label>
+        <div class="input-with-icon">
+          <input type="text" id="excludeInput" placeholder="e.g., 'spam' (optional)" class="input-premium">
+        </div>
+        <small>Exclude comments with these words</small>
+      </div>
+
+      <div class="filter-group">
+        <label>
+          <i class="fas fa-ruler"></i> Minimum Comment Length
+        </label>
+        <input type="number" id="minLengthInput" min="0" value="0" class="input-premium" placeholder="0">
+        <small>Minimum characters (0 = no limit)</small>
+      </div>
+
+      <div class="toggle-group">
+        <label class="toggle-label">
+          <input type="checkbox" id="removeDuplicates" checked>
+          <span class="toggle-slider"></span>
+          <span class="toggle-text">
+            <i class="fas fa-user-check"></i> Remove Duplicate Users
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Winner Picker -->
+    <div class="section glass-effect" id="pickerSection" style="display: none;">
+      <h2 class="section-title">
+        <i class="fas fa-dice"></i> Pick Winners
+      </h2>
+
+      <div class="winner-input-group">
+        <label>Number of Winners</label>
+        <div class="number-input-fancy">
+          <button class="number-btn" id="decreaseBtn">
+            <i class="fas fa-minus"></i>
+          </button>
+          <input type="number" id="winnerCount" min="1" value="1" class="input-premium center">
+          <button class="number-btn" id="increaseBtn">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <button id="pickBtn" class="btn btn-gradient-success btn-large">
+        <i class="fas fa-magic"></i>
+        <span>Pick Random Winners</span>
+        <i class="fas fa-sparkles"></i>
+      </button>
+    </div>
+
+    <!-- Winners Display -->
+    <div class="section" id="winnersSection" style="display: none;">
+      <h2 class="section-title winner-title">
+        <i class="fas fa-crown"></i> Winners Selected!
+      </h2>
+      <div id="winnersList"></div>
+
+      <div class="action-buttons">
+        <button id="copyWinnersBtn" class="btn-icon">
+          <i class="fas fa-copy"></i>
+          <span>Copy Winners</span>
+        </button>
+        <button id="exportJsonBtn" class="btn-icon">
+          <i class="fas fa-file-code"></i>
+          <span>Export JSON</span>
+        </button>
+        <button id="exportCsvBtn" class="btn-icon">
+          <i class="fas fa-file-excel"></i>
+          <span>Export CSV</span>
+        </button>
+        <button id="exportTxtBtn" class="btn-icon">
+          <i class="fas fa-file-alt"></i>
+          <span>Export TXT</span>
+        </button>
+        <button id="pickAgainBtn" class="btn-icon btn-primary">
+          <i class="fas fa-redo"></i>
+          <span>Pick New Winners</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Comments Preview -->
+    <div class="section glass-effect" id="previewSection" style="display: none;">
+      <div class="preview-header">
+        <h3 class="section-title">
+          <i class="fas fa-eye"></i> Preview
+        </h3>
+        <button id="viewAllBtn" class="btn-link">
+          View All <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+      <div id="previewList" class="preview-list"></div>
+
+      <!-- Export All Comments -->
+      <div class="export-all-section">
+        <div class="export-all-header">
+          <i class="fas fa-download"></i>
+          <span>Export All Comments</span>
+        </div>
+        <div class="export-all-buttons">
+          <button id="exportAllJsonBtn" class="btn-icon-small">
+            <i class="fas fa-file-code"></i>
+            <span>JSON</span>
+          </button>
+          <button id="exportAllCsvBtn" class="btn-icon-small">
+            <i class="fas fa-file-excel"></i>
+            <span>CSV</span>
+          </button>
+          <button id="exportAllTxtBtn" class="btn-icon-small">
+            <i class="fas fa-file-alt"></i>
+            <span>TXT</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="premium-footer">
+      <div class="footer-stats">
+        <span id="versionInfo">v2.0 Pro</span>
+        <span class="separator">•</span>
+        <span id="timeInfo">--</span>
+        <span class="separator">•</span>
+        <span class="developer-credit">by <span class="developer-name">oniisama</span></span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal for Full Comments View -->
+  <div id="commentsModal" class="modal">
+    <div class="modal-content glass-effect">
+      <div class="modal-header">
+        <h2><i class="fas fa-comments"></i> All Comments</h2>
+        <button class="modal-close" id="closeModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-search">
+        <input type="text" id="modalSearch" placeholder="Search comments..." class="input-premium">
+      </div>
+      <div id="modalCommentsList" class="modal-comments-list"></div>
+    </div>
+  </div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti"></canvas>
+
+  <script src="popup.js"></script>
+</body>
+</html>
