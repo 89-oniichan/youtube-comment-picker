@@ -83,10 +83,6 @@ Found a bug or have a feature request?
 - Open an issue on GitHub 89-oniichan
 - Contact: 89.oniichan@gmail.com
 
-## Credits
-
-**Developed by oniisama**
-
 ## Version History
 
 ### v2.0.0 (Current)
